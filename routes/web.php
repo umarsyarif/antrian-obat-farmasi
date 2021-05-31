@@ -24,3 +24,9 @@ Route::prefix('pasien')->group(function () {
 Route::get('/antrian', 'PasienController@antrian')->name('antrian');
 
 Route::get('/dashboard', 'PasienController@index')->name('dashboard');
+
+Route::prefix('artisan')->group(function () {
+    Route::get('/migrate', 'ArtisanController@Migration');
+    Route::get('/websockets', 'ArtisanController@ServeWebsockets');
+    Route::get('/clean-websockets', 'ArtisanController@CleanWebsockets');
+});

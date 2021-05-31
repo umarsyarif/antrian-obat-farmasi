@@ -18,7 +18,7 @@ class Initialize extends Command
      *
      * @var string
      */
-    protected $description = 'Command description';
+    protected $description = 'Migrate database and run websockets';
 
     /**
      * Create a new command instance.
@@ -37,8 +37,11 @@ class Initialize extends Command
      */
     public function handle()
     {
-        Artisan::command('mail:send {user}', function ($user) {
-            $this->info("Sending email to: {$user}!");
+        Artisan::command('migrate:fresh', function () {
+            $this->info("Migrate fresh!");
+        });
+        Artisan::command('websockets:serve', function () {
+            $this->info("Websockets served!");
         });
     }
 }
