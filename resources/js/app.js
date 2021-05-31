@@ -30,59 +30,65 @@ const app = new Vue({
     el: '#app',
 
     data: {
-        messages: [],
-        users: [],
+        date: '',
+        time: '',
+        pasien: [],
     },
 
     created() {
-        this.fetchMessages();
+        this.fetchAntrian();
 
-        Echo.join('chat')
-            .here(users => {
-                this.users = users;
+        Echo.channel('pasien')
+            .listen('PasienCreated', (event) => {
+                this.pasien.unshift(event.pasien);
             })
-            .joining(user => {
-                this.users.push(user);
-            })
-            .leaving(user => {
-                this.users = this.users.filter(u => u.id !== user.id);
-            })
-            .listenForWhisper('typing', ({id, name}) => {
-                this.users.forEach((user, index) => {
-                    if (user.id === id) {
-                        user.typing = true;
-                        this.$set(this.users, index, user);
-                    }
-                });
-            })
-            .listen('MessageSent', (event) => {
-                this.messages.push({
-                    message: event.message.message,
-                    user: event.user
-                });
-
-                this.users.forEach((user, index) => {
-                    if (user.id === event.user.id) {
-                        user.typing = false;
-                        this.$set(this.users, index, user);
+            .listen('StatusUpdated', (event) => {
+                var pasien = event.pasien;
+                this.pasien.forEach((row, index) => {
+                    if (row.id === pasien.id) {
+                        this.$set(this.pasien, index, pasien);
                     }
                 });
             });
     },
 
     methods: {
-        fetchMessages() {
-            axios.get('/messages').then(response => {
-                this.messages = response.data;
+        fetchAntrian() {
+            axios.get('/pasien').then(response => {
+                this.pasien = response.data;
             });
         },
 
-        addMessage(message) {
-            this.messages.push(message);
-
-            axios.post('/messages', message).then(response => {
+        createPasien(pasien) {
+            axios.post('/pasien', pasien).then(response => {
                 console.log(response.data);
-            });
-        }
+            }).catch(err => console.error(err));
+        },
+
+        updateStatus(id, status) {
+            const data = {
+                status: status
+            }
+            axios.post('/pasien/' + id, data).then(response => {
+                console.log(response.data);
+            }).catch(err => console.error(err));
+        },
     }
 });
+
+var week = ["Minggu", "Senin", "Selasa", "Rabu", "Kamis", "Jum'at", "Sabtu"];
+var timerID = setInterval(updateTime, 1000);
+updateTime();
+function updateTime() {
+    var cd = new Date();
+    app.time = zeroPadding(cd.getHours(), 2) + ':' + zeroPadding(cd.getMinutes(), 2) + ':' + zeroPadding(cd.getSeconds(), 2);
+    app.date = week[cd.getDay()] + ', ' + zeroPadding(cd.getDate(), 2) + '-' + zeroPadding(cd.getMonth() + 1, 2) + '-' + zeroPadding(cd.getFullYear(), 4);
+};
+
+function zeroPadding(num, digit) {
+    var zero = '';
+    for (var i = 0; i < digit; i++) {
+        zero += '0';
+    }
+    return (zero + num).slice(-digit);
+}

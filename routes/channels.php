@@ -11,6 +11,6 @@
 |
 */
 
-Broadcast::channel('chat', function ($user) {
-	return $user;
+Broadcast::channel('pasien', function () {
+    return true;
 });

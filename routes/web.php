@@ -13,6 +13,14 @@
 
 Auth::routes();
 
-Route::get('/', 'ChatsController@index');
-Route::get('messages', 'ChatsController@fetchMessages');
-Route::post('messages', 'ChatsController@sendMessage');
+Route::get('/', 'PasienController@page');
+
+Route::prefix('pasien')->group(function () {
+    Route::get('/', 'PasienController@fetchAntrian');
+    Route::post('/', 'PasienController@store');
+    Route::post('/{pasien}', 'PasienController@update');
+});
+
+Route::get('/antrian', 'PasienController@antrian')->name('antrian');
+
+Route::get('/dashboard', 'PasienController@index')->name('dashboard');
