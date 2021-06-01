@@ -40,10 +40,9 @@
 
 @push('script')
     <script>
-        const btn = document.getElementById('refresh');
-        btn.onclick = function() {
-            alert(1);
-        }
+        $("#refresh").on('click', function() {
+            alert('yyess');
+        });
 
     </script>
 @endpush

@@ -23,7 +23,7 @@ Route::prefix('pasien')->group(function () {
 
 Route::get('/antrian', 'PasienController@antrian')->name('antrian');
 
-Route::get('/dashboard', 'PasienController@index')->name('dashboard');
+Route::get('/dashboard', 'PasienController@index')->name('dashboard')->middleware('auth');
 
 Route::prefix('artisan')->middleware('auth')->group(function () {
     Route::get('/migrate', 'ArtisanController@Migration');

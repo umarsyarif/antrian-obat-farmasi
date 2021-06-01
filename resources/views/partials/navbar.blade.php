@@ -24,6 +24,19 @@
                         {{ date('d F Y') }} @{{ time }}
                     </strong>
                 </li>
+                @auth
+                    <li class="user-profile header-notification" data-toggle="tooltip" data-placement="top" title=""
+                        data-original-title="Logout" onclick="event.preventDefault();
+                            document.getElementById('logout-form').submit();">
+                        <i class=" feather icon-log-out"></i>
+                    </li>
+                    <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                        @csrf
+                    </form>
+                @endauth
+                @guest
+
+                @endguest
             </ul>
         </div>
     </div>
