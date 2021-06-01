@@ -75,7 +75,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <button class="btn btn-sm btn-primary float-right">Filter</button>
+                            <button class="btn btn-sm btn-primary float-right mr-2">Filter</button>
                         </form>
                     </div>
                 </div>
@@ -84,9 +84,9 @@
                         <h5>
                             History Antrian Obat
                         </h5>
-                        <span>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Nihil dolorum iste autem.
-                            Doloremque, officiis molestias, labore ea quod sed temporibus quas doloribus similique natus
-                            cum. Explicabo similique minus dolor dicta!</span>
+                        <a href="javascript:void(0)" class="btn btn-sm btn-warning float-right">
+                            <i class="feather icon-printer"></i> Print
+                        </a>
                     </div>
                     <div class="card-block">
                         <div class="dt-responsive table-responsive">
@@ -117,8 +117,8 @@
                                                 {{ $row->waktu_selesai ? ($selesai = date('H:i:s', strtotime($row->waktu_selesai))) : '-' }}
                                             </td>
                                             <?php
-                                            $row->waktu_selesai ? ($diff =
-                                            Carbon\Carbon::parse($mulai)->diffInSeconds($selesai)) : '-';
+                                            $diff = $row->waktu_selesai ?
+                                            Carbon\Carbon::parse($mulai)->diffInSeconds($selesai) : 0;
                                             $diff > 3600 ? $orang_telat++ : '';
                                             ?>
                                             <td>
@@ -144,7 +144,6 @@
 
 @push('script')
     <!-- data-table js -->
-    {{-- <script src="{{ asset('adminty\files\bower_components\datatables.net\js\jquery.dataTables.min.js') }}"></script> --}}
     <script src="https://cdn.datatables.net/1.10.24/js/jquery.dataTables.min.js"></script>
     <script src="https://cdn.datatables.net/1.10.24/js/dataTables.bootstrap4.min.js"></script>
     <script>

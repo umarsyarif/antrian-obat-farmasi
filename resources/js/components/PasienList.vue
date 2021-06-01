@@ -55,7 +55,9 @@
       </tbody>
     </table>
     <div id="print" class="col-12 d-none" style="height: 200px; border: 1px">
-      <h1 class="text-center">{{ printAntrian }}</h1>
+      <h3 class="text-center">RS Tabrani Pekanbaru</h3>
+      <p class="text-center mt-3">Antrian Nomor</p>
+      <h1 class="text-center mt-2">{{ printAntrian }}</h1>
     </div>
   </div>
 </template>
@@ -80,11 +82,13 @@ export default {
       text = ` ${row.is_telat ? "text-danger" : text}`;
       return text;
     },
-    async print(no) {
-      console.log(no);
+    print(no) {
       this.printAntrian = no;
       // Pass the element id here
-      await this.$htmlToPaper("print");
+      var ini = this;
+      setTimeout(function () {
+        ini.$htmlToPaper("print");
+      }, 1000);
     },
     zeroPadding(num, digit) {
       var zero = "";
