@@ -15757,7 +15757,7 @@ Vue.use(__WEBPACK_IMPORTED_MODULE_0_vue_html_to_paper___default.a, options);
 
 var app = new Vue({
     el: '#app',
-
+    VueQrcode: VueQrcode,
     data: {
         date: '',
         time: '',
