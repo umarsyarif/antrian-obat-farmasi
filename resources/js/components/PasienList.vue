@@ -29,7 +29,7 @@
             }}
           </td>
           <td>
-            <button class="btn btn-sm btn-info" @click="print(row.antrian)">
+            <button class="btn btn-sm btn-info" @click="print(row)">
               <i class="feather icon-printer"></i> Print
             </button>
             <button
@@ -58,17 +58,25 @@
       <h3 class="text-center">RS Tabrani Pekanbaru</h3>
       <p class="text-center mt-3">Antrian Nomor</p>
       <h1 class="text-center mt-2">{{ printAntrian }}</h1>
+      <div class="col-12 text-center">
+        <vue-qrcode :value="url"></vue-qrcode>
+      </div>
+      <p class="text-center">Scan QR Code untuk notifikasi pengambilan obat.</p>
     </div>
   </div>
 </template>
 
 <script>
+import VueQrcode from "vue-qrcode";
 export default {
   props: ["pasien", "time"],
-
+  components: {
+    VueQrcode,
+  },
   data() {
     return {
       printAntrian: "0",
+      url: "https://t.me/FarmasiRSTabraniPKUBOT?start=",
     };
   },
   methods: {
@@ -82,8 +90,9 @@ export default {
       text = ` ${row.is_telat ? "text-danger" : text}`;
       return text;
     },
-    print(no) {
-      this.printAntrian = no;
+    print(row) {
+      this.printAntrian = row.antrian;
+      this.url = `https://t.me/FarmasiRSTabraniPKUBOT?start=${row.id}`;
       // Pass the element id here
       var ini = this;
       setTimeout(function () {

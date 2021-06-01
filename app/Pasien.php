@@ -2,6 +2,7 @@
 
 namespace App;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 
 class Pasien extends Model
@@ -29,8 +30,7 @@ class Pasien extends Model
      * @var array
      */
     // protected $casts = [
-    //     'created_at' => 'datetime:d-m-Y H:i:s',
-    //     'updated_at' => 'datetime:d-m-Y H:i:s',
+    //     'created_at' => 'datetime:d F Y',
     // ];
 
     /**
@@ -38,12 +38,20 @@ class Pasien extends Model
      *
      * @var array
      */
-    protected $appends = ['waktu_mulai', 'timer_count'];
+    protected $appends = ['waktu_mulai', 'timer_count', 'terlambat'];
 
     // Getters
     public function getWaktuMulaiAttribute()
     {
         return date('H:i:s', strtotime($this->attributes['created_at']));
+    }
+
+    public function getTerlambatAttribute()
+    {
+        $start = $this->attributes['created_at'];
+        $end = $this->attributes['waktu_selesai'];
+        $diff =  Carbon::parse($start)->diffInSeconds($end);
+        return $diff > 3600 ? gmdate('H:i:s', $diff - 3600) : '-';
     }
 
     public function getTimerCountAttribute()
