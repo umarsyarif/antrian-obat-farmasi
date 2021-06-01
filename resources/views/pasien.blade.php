@@ -20,6 +20,10 @@
                         <a href="{{ route('antrian') }}" class="btn btn-sm btn-warning float-right mr-2">
                             Antrian
                         </a>
+                        <a href="javascript:void(0);" id="refresh" class="btn btn-sm btn-inverse float-right mr-2 pr-2"
+                            data-toggle="tooltip" data-placement="top" title="" data-original-title="Refresh">
+                            <i class="feather icon-refresh-cw"></i>
+                        </a>
                     </div>
 
                     <div class="card-body">
@@ -33,3 +37,13 @@
         </div>
     </div>
 @endsection
+
+@push('script')
+    <script>
+        const btn = document.getElementById('refresh');
+        btn.onclick = function() {
+            alert(1);
+        }
+
+    </script>
+@endpush

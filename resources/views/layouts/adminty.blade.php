@@ -27,8 +27,7 @@
     <!-- Data Table Css -->
     <link rel="stylesheet" type="text/css"
         href="{{ asset('adminty\files\bower_components\datatables.net-bs4\css\dataTables.bootstrap4.min.css') }}">
-    <link rel="stylesheet" type="text/css"
-        href="{{ asset('adminty\files\bower_components\datatables.net-responsive-bs4\css\responsive.bootstrap4.min.css') }}">
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.24/css/dataTables.bootstrap4.min.css">
 </head>
 
 <body>

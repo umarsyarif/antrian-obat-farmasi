@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Pasien;
 use App\Events\PasienCreated;
 use App\Events\StatusUpdated;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 class PasienController extends Controller
@@ -21,9 +22,30 @@ class PasienController extends Controller
 
     public function index(Request $request)
     {
-        $pasien = Pasien::latest()->get();
+        $jenis_obat = $request->jenis_obat;
+        $jenis_pasien = $request->jenis_pasien;
+        $tanggal_awal = $request->tanggal_awal;
+        $tanggal_akhir = $request->tanggal_akhir;
+
+        $pasien = Pasien::latest()
+            ->when($tanggal_awal & $tanggal_akhir, function ($q) use ($tanggal_awal, $tanggal_akhir) {
+                $q->whereBetween('created_at', [$tanggal_awal, Carbon::parse($tanggal_akhir)->addDay()]);
+            })
+            ->when($jenis_obat, function ($q) use ($jenis_obat) {
+                $q->where('jenis_obat', $jenis_obat);
+            })
+            ->when($jenis_pasien, function ($q) use ($jenis_pasien) {
+                $q->where('jenis_pasien', $jenis_pasien);
+            })->get();
+
         $data = [
-            'pasien' => $pasien
+            'pasien' => $pasien,
+            'filter' => [
+                'jenis_obat' => $request->jenis_obat,
+                'jenis_pasien' => $request->jenis_pasien,
+                'tanggal_awal' => $request->tanggal_awal,
+                'tanggal_akhir' => $request->tanggal_akhir
+            ]
         ];
         return view('dashboard', $data);
     }

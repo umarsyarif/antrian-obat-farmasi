@@ -13,19 +13,19 @@
 
 Auth::routes();
 
-Route::get('/', 'PasienController@page');
+Route::get('/', 'PasienController@page')->middleware('auth');
 
 Route::prefix('pasien')->group(function () {
     Route::get('/', 'PasienController@fetchAntrian');
-    Route::post('/', 'PasienController@store');
-    Route::post('/{pasien}', 'PasienController@update');
+    Route::post('/', 'PasienController@store')->middleware('auth');
+    Route::post('/{pasien}', 'PasienController@update')->middleware('auth');
 });
 
 Route::get('/antrian', 'PasienController@antrian')->name('antrian');
 
 Route::get('/dashboard', 'PasienController@index')->name('dashboard');
 
-Route::prefix('artisan')->group(function () {
+Route::prefix('artisan')->middleware('auth')->group(function () {
     Route::get('/migrate', 'ArtisanController@Migration');
     Route::get('/websockets', 'ArtisanController@ServeWebsockets');
     Route::get('/clean-websockets', 'ArtisanController@CleanWebsockets');

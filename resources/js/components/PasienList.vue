@@ -29,7 +29,7 @@
             }}
           </td>
           <td>
-            <button class="btn btn-sm btn-info">
+            <button class="btn btn-sm btn-info" @click="print(row.antrian)">
               <i class="feather icon-printer"></i> Print
             </button>
             <button
@@ -54,6 +54,9 @@
         </tr>
       </tbody>
     </table>
+    <div id="print" class="col-12 d-none" style="height: 200px; border: 1px">
+      <h1 class="text-center">{{ printAntrian }}</h1>
+    </div>
   </div>
 </template>
 
@@ -61,6 +64,11 @@
 export default {
   props: ["pasien", "time"],
 
+  data() {
+    return {
+      printAntrian: "0",
+    };
+  },
   methods: {
     updateStatus(id, status) {
       this.$emit("statusupdated", id, status);
@@ -71,6 +79,12 @@ export default {
       }`;
       text = ` ${row.is_telat ? "text-danger" : text}`;
       return text;
+    },
+    async print(no) {
+      console.log(no);
+      this.printAntrian = no;
+      // Pass the element id here
+      await this.$htmlToPaper("print");
     },
     zeroPadding(num, digit) {
       var zero = "";

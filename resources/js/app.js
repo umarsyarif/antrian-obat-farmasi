@@ -26,6 +26,24 @@ files.keys().map(key => Vue.component(key.split('/').pop().split('.')[0], files(
  * or customize the JavaScript scaffolding to fit your unique needs.
  */
 
+import VueHtmlToPaper from 'vue-html-to-paper';
+const options = {
+    name: '_blank',
+    specs: [
+        'fullscreen=yes',
+        'titlebar=yes',
+        'scrollbars=yes'
+    ],
+    styles: [
+        'https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css',
+        'https://unpkg.com/kidlat-css/css/kidlat.css'
+    ],
+    timeout: 1000, // default timeout before the print window appears
+    autoClose: true, // if false, the window will not close after printing
+    windowTitle: window.document.title, // override the window title
+}
+Vue.use(VueHtmlToPaper, options);
+
 const app = new Vue({
     el: '#app',
 
@@ -40,7 +58,10 @@ const app = new Vue({
 
         Echo.channel('pasien')
             .listen('PasienCreated', (event) => {
-                this.pasien.unshift(event.pasien);
+                console.log('BARU', event.pasien);
+                var pasien = event.pasien;
+                pasien.antrian = this.pasien.length + 1;
+                this.pasien.unshift(pasien);
             })
             .listen('StatusUpdated', (event) => {
                 var pasien = event.pasien;
@@ -55,7 +76,11 @@ const app = new Vue({
     methods: {
         fetchAntrian() {
             axios.get('/pasien').then(response => {
-                this.pasien = response.data;
+                var data = response.data;
+                data.forEach(function (element, index) {
+                    element.antrian = data.length - index;
+                })
+                this.pasien = data;
             });
         },
 

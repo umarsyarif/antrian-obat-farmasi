@@ -12,11 +12,11 @@
       </thead>
       <tbody>
         <tr
-          v-for="(row, index) in antrian"
+          v-for="row in antrian"
           :key="row.id"
           :class="row.status != null ? 'bg-success' : ''"
         >
-          <td>{{ pasien.length - index }}</td>
+          <td>{{ row.antrian }}</td>
           <td>{{ row.nama }}</td>
           <td>{{ row.jenis_pasien }}</td>
           <td>{{ row.jenis_obat }}</td>
@@ -41,9 +41,16 @@ export default {
 
   computed: {
     antrian: function () {
-      return this.pasien.filter((i) => i.status !== 1);
+      var tmp = this.pasien.filter((i) => i.status !== 1);
+      return tmp.reverse();
     },
   },
 };
 </script>
+<style>
+tr {
+  height: 100px;
+  font-size: 32px;
+}
+</style>
 
