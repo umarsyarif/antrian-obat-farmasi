@@ -24,9 +24,11 @@ class TelegramController extends Controller
         // ]);
         // return $response;
     }
-    public function getUpdates()
+    public function getUpdates(Request $request)
     {
-        $updates = Telegram::getUpdates();
+        $offset = $request->offset ?? null;
+        $limit = $request->limit ?? 100;
+        $updates = Telegram::getUpdates(['offset' => $offset, 'limit' => $limit]);
         return (json_encode($updates));
     }
     public function getWebhookUpdates()
