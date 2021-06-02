@@ -11,7 +11,7 @@
 |
 */
 
-Auth::routes();
+Auth::routes(['register' => false, 'password.reset' => false]);
 
 Route::get('/', 'PasienController@page')->middleware('auth');
 

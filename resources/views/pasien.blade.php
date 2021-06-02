@@ -21,18 +21,22 @@
                             Antrian
                         </a>
                         <a href="javascript:void(0);" id="refresh" class="btn btn-sm btn-inverse float-right mr-2 pr-2"
-                            data-toggle="tooltip" data-placement="top" title="" data-original-title="Refresh">
+                            data-toggle="tooltip" data-placement="top" title="" data-original-title="Refresh"
+                            @click="fetchAntrian">
                             <i class="feather icon-refresh-cw"></i>
                         </a>
                     </div>
 
                     <div class="card-body">
-                        <pasien-list :pasien="pasien" :time="time" @statusupdated="updateStatus"></pasien-list>
+                        <pasien-list :pasien="pasien" :time="time" :user="{{ auth()->user() }}"
+                            @statusupdated="updateStatus"></pasien-list>
                     </div>
                 </div>
             </div>
             <div class="col-md-3">
-                <pasien-form @pasiencreated="createPasien"></pasien-form>
+                @if (auth()->user()->is_admin)
+                    <pasien-form @pasiencreated="createPasien"></pasien-form>
+                @endif
             </div>
         </div>
     </div>

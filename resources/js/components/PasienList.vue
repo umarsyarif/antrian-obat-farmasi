@@ -29,7 +29,11 @@
             }}
           </td>
           <td>
-            <button class="btn btn-sm btn-info" @click="print(row)">
+            <button
+              class="btn btn-sm btn-info"
+              @click="print(row)"
+              v-if="user.is_admin"
+            >
               <i class="feather icon-printer"></i> Print
             </button>
             <button
@@ -69,7 +73,7 @@
 <script>
 import VueQrcode from "vue-qrcode";
 export default {
-  props: ["pasien", "time"],
+  props: ["pasien", "time", "user"],
   components: {
     VueQrcode,
   },

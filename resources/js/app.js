@@ -73,6 +73,7 @@ const app = new Vue({
 
     methods: {
         fetchAntrian() {
+            this.pasien = [];
             axios.get('/pasien').then(response => {
                 var data = response.data;
                 data.forEach(function (element, index) {
