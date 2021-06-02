@@ -79,64 +79,7 @@
                         </form>
                     </div>
                 </div>
-                <div class="card card-default">
-                    <div class="card-header">
-                        <h5>
-                            History Antrian Obat
-                        </h5>
-                        <a href="javascript:void(0)" class="btn btn-sm btn-warning float-right">
-                            <i class="feather icon-printer"></i> Print
-                        </a>
-                    </div>
-                    <div class="card-block">
-                        <div class="dt-responsive table-responsive">
-                            <table id="simpletable" class="table table-striped table-bordered nowrap">
-                                <thead>
-                                    <tr>
-                                        <th>#</th>
-                                        <th>Nama</th>
-                                        <th>Jenis Pasien</th>
-                                        <th>Jenis Obat</th>
-                                        <th>Tanggal</th>
-                                        <th>Waktu Mulai</th>
-                                        <th>Waktu Selesai</th>
-                                        <th>Terlambat</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <?php $orang_telat = 0; ?>
-                                    @foreach ($pasien as $row)
-                                        <tr>
-                                            <td>{{ $loop->iteration }}</td>
-                                            <td>{{ $row->nama }}</td>
-                                            <td>{{ $row->jenis_pasien }}</td>
-                                            <td>{{ $row->jenis_obat }}</td>
-                                            <td>{{ $row->created_at->format('d F Y') }}</td>
-                                            <td>{{ $mulai = $row->created_at->format('H:i:s') }}</td>
-                                            <td>
-                                                {{ $row->waktu_selesai ? ($selesai = date('H:i:s', strtotime($row->waktu_selesai))) : '-' }}
-                                            </td>
-                                            <?php
-                                            $diff = $row->waktu_selesai ?
-                                            Carbon\Carbon::parse($mulai)->diffInSeconds($selesai) : 0;
-                                            $diff > 3600 ? $orang_telat++ : '';
-                                            ?>
-                                            <td>
-                                                {{ $row->waktu_selesai ? ($diff > 3600 ? gmdate('H:i:s', $diff - 3600) : '-') : '-' }}
-                                            </td>
-                                        </tr>
-                                    @endforeach
-                                </tbody>
-                                <tfoot>
-                                    <tr>
-                                        <th colspan="7">Terlambat</th>
-                                        <th>{{ $orang_telat }}</th>
-                                    </tr>
-                                </tfoot>
-                            </table>
-                        </div>
-                    </div>
-                </div>
+                <dashboard :pasien="{{ $pasien }}"></dashboard>
             </div>
         </div>
     </div>
