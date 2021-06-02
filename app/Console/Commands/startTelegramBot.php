@@ -60,7 +60,7 @@ class startTelegramBot extends Command
             if ($value["update_id"] == $offset) continue;
             $this->setPreviousUpdateID($value["update_id"]);
             $text = explode(" ", $value['message']['text']);
-            if ($text[0] != "/lihat-status-antrian") continue;
+            if (($text[0] != "/lihat-status-antrian") && ($text[0] != "/start")) continue;
             if (!$text[1]) continue;
 
             $pasien = Pasien::find($text[1]);
