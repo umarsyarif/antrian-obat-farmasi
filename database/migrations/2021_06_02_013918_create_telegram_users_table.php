@@ -17,7 +17,7 @@ class CreateTelegramUsersTable extends Migration
             $table->increments('id');
             $table->string('chat_id');
             $table->string('pasien_id');
-            $table->string('username');
+            $table->string('username')->nullable();
             $table->string('first_name');
             $table->string('last_name');
             $table->timestamps();

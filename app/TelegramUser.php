@@ -13,4 +13,8 @@ class TelegramUser extends Model
         'first_name',
         'last_name',
     ];
+    public function telegram_user()
+    {
+        return $this->belongsTo('App\Pasien');
+    }
 }

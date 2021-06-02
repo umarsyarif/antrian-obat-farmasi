@@ -4,6 +4,7 @@ namespace App;
 
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
+use App\Jobs\sendPharmacyQueueStatus;
 
 class Pasien extends Model
 {
@@ -69,5 +70,25 @@ class Pasien extends Model
             $this->attributes['waktu_selesai'] = $now;
         }
         $this->attributes['status'] = $value;
+        $telegram_user = $this->telegram_user()->get();
+        foreach ($telegram_user as $key => $value) {
+            $message = [
+                "message" => [
+                    "from" => [
+                        "username" => $value['username'],
+                        'first_name' => $value['first_name'],
+                        'last_name' => $value['last_name'],
+                        'id' => $value['chat_id'],
+                    ]
+                ]
+            ];
+            $process = new sendPharmacyQueueStatus($message, $this->attributes);
+            dispatch($process);
+        }
+    }
+
+    public function telegram_user()
+    {
+        return $this->hasMany('App\TelegramUser');
     }
 }

@@ -38,7 +38,7 @@ class sendPharmacyQueueStatus implements ShouldQueue
     {
 
         $pasien = $this->pasien;
-        $pasien_id = $this->pasien->id;
+        $pasien_id = $this->pasien->id ?? $this->pasien['id'];
         $message = $this->telegram_message;
         $username = $message['message']['from']['username'];
         $first_name = $message['message']['from']['first_name'];
@@ -58,32 +58,32 @@ class sendPharmacyQueueStatus implements ShouldQueue
         // `replyWith<Message|Photo|Audio|Video|Voice|Document|Sticker|Location|ChatAction>()` all the available methods are dynamically
         // handled when you replace `send<Method>` with `replyWith` and use the same parameters - except chat_id does NOT need to be included in the array.
         echo "Sending message...\n";
-        if ($pasien->status === null) {
+        if (($pasien->status ?? $pasien['status']) === null) {
             Telegram::sendMessage([
                 'chat_id' => $message['message']['from']['id'],
                 'parse_mode' => 'HTML',
                 'text' =>
-                'Halo! Order obat atas nama ' . $pasien->nama .
+                'Halo! Order obat atas nama ' . ($pasien->nama ?? $pasien['nama']) .
                     " <b>sedang dalam proses</b>.\n \n" .
                     "Anda akan diberikan notifikasi setelah order selesai di proses,\n" .
                     "Terimakasih"
             ]);
-        } elseif ($pasien->status == 1 || $pasien->status === true) {
+        } elseif (($pasien->status ?? $pasien['status']) == 0 || ($pasien->status ?? $pasien['status']) === true) {
             Telegram::sendMessage([
                 'chat_id' => $message['message']['from']['id'],
                 'parse_mode' => 'HTML',
                 'text' =>
-                'Halo! Order obat atas nama ' . $pasien->nama .
+                'Halo! Order obat atas nama ' . ($pasien->nama ?? $pasien['nama']) .
                     " <b>telah selesai di proses</b>, silahkan ambil order di konter farmasi.\n \n" .
                     "\n" .
                     "Terimakasih"
             ]);
-        } elseif ($pasien->status === 0 || $pasien->status === false) {
+        } elseif (($pasien->status ?? $pasien['status']) === 1 || ($pasien->status ?? $pasien['status']) === false) {
             Telegram::sendMessage([
                 'chat_id' => $message['message']['from']['id'],
                 'parse_mode' => 'HTML',
                 'text' =>
-                'Halo! Order obat atas nama ' . $pasien->nama .
+                'Halo! Order obat atas nama ' . ($pasien->nama ?? $pasien['nama']) .
                     " <b>telah selesai dan telah diterima pihak penerima pada " . $pasien->waktu_diambil . "</b>\n \n" .
                     "\n" .
                     "Terimakasih"

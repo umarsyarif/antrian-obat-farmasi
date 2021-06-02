@@ -46,7 +46,6 @@ Vue.use(VueHtmlToPaper, options);
 
 const app = new Vue({
     el: '#app',
-    VueQrcode,
     data: {
         date: '',
         time: '',
