@@ -9,7 +9,7 @@
           <th scope="col">Jenis Pasien</th>
           <th scope="col">Waktu</th>
           <th scope="col">Status</th>
-          <th scope="col" class="text-center">Action</th>
+          <th scope="col" class="text-center" v-if="user.is_admin">Action</th>
         </tr>
       </thead>
       <tbody>
@@ -28,13 +28,16 @@
                 : "Obat Selesai"
             }}
           </td>
-          <td>
+          <td v-if="user.is_admin">
             <button
-              class="btn btn-sm btn-info"
+              class="btn btn-sm btn-info pr-2"
               @click="print(row)"
-              v-if="user.is_admin"
+              data-toggle="tooltip"
+              data-placement="top"
+              title=""
+              data-original-title="Print Antrian"
             >
-              <i class="feather icon-printer"></i> Print
+              <i class="feather icon-printer"></i>
             </button>
             <button
               v-if="row.status == 0"

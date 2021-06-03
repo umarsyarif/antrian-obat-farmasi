@@ -41,12 +41,3 @@
         </div>
     </div>
 @endsection
-
-@push('script')
-    <script>
-        $("#refresh").on('click', function() {
-            alert('yyess');
-        });
-
-    </script>
-@endpush

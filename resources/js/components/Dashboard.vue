@@ -6,6 +6,7 @@
         href="javascript:void(0)"
         class="btn btn-sm btn-warning float-right"
         @click="print"
+        v-if="user.is_admin"
       >
         <i class="feather icon-printer"></i> Print
       </a>
@@ -56,7 +57,7 @@
 
 <script>
 export default {
-  props: ["pasien"],
+  props: ["pasien", "user"],
   data() {
     return {
       terlambat: 0,
