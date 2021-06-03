@@ -12,6 +12,16 @@
       </a>
     </div>
     <div id="print" class="card-block">
+      <div class="text-center">
+        <h4>Laporan Farmasi RS Tabrani</h4>
+        <p v-if="params.tanggal_awal && params.tanggal_akhir">
+          {{ params.tanggal_awal }} s/d {{ params.tanggal_akhir }}
+        </p>
+        <p v-if="params.jenis_obat || params.jenis_pasien">
+          Jenis obat : {{ params.jenis_obat ? params.jenis_obat : "-" }} | Jenis
+          pasien : {{ params.jenis_pasien ? params.jenis_pasien : "-" }}
+        </p>
+      </div>
       <div class="dt-responsive table-responsive">
         <table
           id="simpletable"
@@ -61,6 +71,16 @@ export default {
   data() {
     return {
       terlambat: 0,
+      params: [],
+    };
+  },
+  created() {
+    var params = window.location.search.substr(1).split("&");
+    this.params = {
+      jenis_obat: params[0].split("=")[1],
+      jenis_pasien: params[1].split("=")[1],
+      tanggal_awal: params[2].split("=")[1],
+      tanggal_akhir: params[3].split("=")[1],
     };
   },
   methods: {
