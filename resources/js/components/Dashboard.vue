@@ -15,7 +15,8 @@
       <div class="text-center">
         <h4>Laporan Farmasi RS Tabrani</h4>
         <p v-if="params.tanggal_awal && params.tanggal_akhir">
-          {{ params.tanggal_awal }} s/d {{ params.tanggal_akhir }}
+          {{ getFormattedDate(params.tanggal_awal) }} s/d
+          {{ getFormattedDate(params.tanggal_akhir) }}
         </p>
         <p v-if="params.jenis_obat || params.jenis_pasien">
           Jenis obat : {{ params.jenis_obat ? params.jenis_obat : "-" }} | Jenis
@@ -29,7 +30,7 @@
         >
           <thead>
             <tr>
-              <th>#</th>
+              <th>No</th>
               <th>Nama</th>
               <th>Jenis Pasien</th>
               <th>Jenis Obat</th>
@@ -75,15 +76,31 @@ export default {
     };
   },
   created() {
-    var params = window.location.search.substr(1).split("&");
     this.params = {
-      jenis_obat: params[0].split("=")[1],
-      jenis_pasien: params[1].split("=")[1],
-      tanggal_awal: params[2].split("=")[1],
-      tanggal_akhir: params[3].split("=")[1],
+      jenis_obat: this.getUrlParameter("jenis_obat"),
+      jenis_pasien: this.getUrlParameter("jenis_pasien"),
+      tanggal_awal: this.getUrlParameter("tanggal_awal"),
+      tanggal_akhir: this.getUrlParameter("tanggal_akhir"),
     };
   },
   methods: {
+    getUrlParameter(sParam) {
+      var sPageURL = window.location.search.substring(1),
+        sURLVariables = sPageURL.split("&"),
+        sParameterName,
+        i;
+
+      for (i = 0; i < sURLVariables.length; i++) {
+        sParameterName = sURLVariables[i].split("=");
+
+        if (sParameterName[0] === sParam) {
+          return typeof sParameterName[1] === undefined
+            ? true
+            : decodeURIComponent(sParameterName[1]);
+        }
+      }
+      return false;
+    },
     countTerlambat() {
       var count = 0;
       this.pasien.forEach((element) => {

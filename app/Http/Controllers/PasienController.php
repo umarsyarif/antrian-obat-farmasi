@@ -24,11 +24,10 @@ class PasienController extends Controller
     {
         $jenis_obat = $request->jenis_obat;
         $jenis_pasien = $request->jenis_pasien;
-        $tanggal_awal = $request->tanggal_awal;
-        $tanggal_akhir = $request->tanggal_akhir;
-
+        $tanggal_awal = $request->tanggal_awal ?? now()->format('Y-m-01');
+        $tanggal_akhir = $request->tanggal_akhir ?? now()->format('Y-m-t');
         $pasien = Pasien::latest()
-            ->when($tanggal_awal & $tanggal_akhir, function ($q) use ($tanggal_awal, $tanggal_akhir) {
+            ->when($tanggal_awal && $tanggal_akhir, function ($q) use ($tanggal_awal, $tanggal_akhir) {
                 $q->whereBetween('created_at', [$tanggal_awal, Carbon::parse($tanggal_akhir)->addDay()]);
             })
             ->when($jenis_obat, function ($q) use ($jenis_obat) {
@@ -41,10 +40,10 @@ class PasienController extends Controller
         $data = [
             'pasien' => $pasien,
             'filter' => [
-                'jenis_obat' => $request->jenis_obat,
-                'jenis_pasien' => $request->jenis_pasien,
-                'tanggal_awal' => $request->tanggal_awal,
-                'tanggal_akhir' => $request->tanggal_akhir
+                'jenis_obat' => $jenis_obat,
+                'jenis_pasien' => $jenis_pasien,
+                'tanggal_awal' => $tanggal_awal,
+                'tanggal_akhir' => $tanggal_akhir
             ]
         ];
         return view('dashboard', $data);

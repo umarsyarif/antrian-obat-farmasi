@@ -3,7 +3,7 @@
     <table class="table">
       <thead>
         <tr>
-          <th scope="col">#</th>
+          <th scope="col">No</th>
           <th scope="col">Nama Pasien</th>
           <th scope="col">Jenis Obat</th>
           <th scope="col">Jenis Pasien</th>
@@ -18,7 +18,7 @@
           <td>{{ row.nama }}</td>
           <td>{{ row.jenis_obat }}</td>
           <td>{{ row.jenis_pasien }}</td>
-          <td>{{ row.timer_count ? row.timer_count : "01:00:00" }}</td>
+          <td>{{ row.timer_count ? row.timer_count : "00:00:00" }}</td>
           <td>
             {{
               row.status
@@ -31,11 +31,12 @@
           <td v-if="user.is_admin">
             <button
               class="btn btn-sm btn-info pr-2"
-              @click="print(row)"
               data-toggle="tooltip"
               data-placement="top"
               title=""
               data-original-title="Print Antrian"
+              :disabled="$root.$data.isLoading"
+              @click="print(row)"
             >
               <i class="feather icon-printer"></i>
             </button>
@@ -44,6 +45,7 @@
               :class="`btn btn-sm float-right ${
                 row.status == 1 ? 'btn-disabled' : 'btn-primary'
               }`"
+              :disabled="$root.$data.isLoading"
               @click="updateStatus(row.id, true)"
             >
               Obat Diambil
@@ -53,6 +55,7 @@
               :class="`btn btn-sm float-right mr-2 ${
                 row.status != null ? 'btn-disabled' : 'btn-success'
               }`"
+              :disabled="$root.$data.isLoading"
               @click="updateStatus(row.id, false)"
             >
               Obat Selesai
@@ -66,7 +69,7 @@
       <p class="text-center mt-3">Antrian Nomor</p>
       <h1 class="text-center mt-2">{{ printAntrian }}</h1>
       <div class="col-12 text-center">
-        <vue-qrcode :value="url"></vue-qrcode>
+        <vue-qrcode :value="botUrl"></vue-qrcode>
       </div>
       <p class="text-center">Scan QR Code untuk notifikasi pengambilan obat.</p>
     </div>
@@ -76,14 +79,17 @@
 <script>
 import VueQrcode from "vue-qrcode";
 export default {
-  props: ["pasien", "time", "user"],
+  props: ["pasien", "time", "user", "url"],
   components: {
     VueQrcode,
+  },
+  created() {
+    console.log(this.$root.$data.isLoading);
   },
   data() {
     return {
       printAntrian: "0",
-      url: "https://t.me/FarmasiRSTabraniPKUBOT?start=",
+      botUrl: "",
     };
   },
   methods: {
@@ -99,12 +105,13 @@ export default {
     },
     print(row) {
       this.printAntrian = row.antrian;
-      this.url = `https://t.me/FarmasiRSTabraniPKUBOT?start=${row.id}`;
-      // Pass the element id here
+      this.botUrl = this.url + row.id;
+      let loader = this.$loading.show();
       var ini = this;
       setTimeout(function () {
+        loader.hide();
         ini.$htmlToPaper("print");
-      }, 1000);
+      }, 2500);
     },
     zeroPadding(num, digit) {
       var zero = "";
@@ -131,17 +138,16 @@ export default {
   watch: {
     time: {
       handler(value) {
-        var now = new Date();
+        var timeDone = new Date();
         this.pasien.forEach((element) => {
           var createdAt = new Date(element.created_at);
-          if (element.status !== null) {
-            var cd = new Date(element.waktu_selesai);
-            element.timer_count = this.parseTime(new Date(cd - createdAt));
-            element.is_telat = cd - createdAt > 3600000;
-          } else {
-            element.timer_count = this.parseTime(new Date(now - createdAt));
-            element.is_telat = now - createdAt > 3600000;
-          }
+          var timeTelat = element.jenis_obat == "Racikan" ? 3600000 : 1800000;
+          timeDone =
+            element.status !== null
+              ? new Date(element.waktu_selesai)
+              : timeDone;
+          element.timer_count = this.parseTime(new Date(timeDone - createdAt));
+          element.is_telat = timeDone - createdAt > timeTelat;
         });
       },
       immediate: true, // This ensures the watcher is triggered upon creation

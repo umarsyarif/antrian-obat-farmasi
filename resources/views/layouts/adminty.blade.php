@@ -36,7 +36,7 @@
     @include('partials.loader')
     <!-- Pre-loader end -->
 
-    <div id="app">
+    <div id="app" ref="container">
         <div id="pcoded" class="pcoded">
             <div class="pcoded-overlay-box"></div>
             <div class="pcoded-container navbar-wrapper">

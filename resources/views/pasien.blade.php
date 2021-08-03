@@ -5,6 +5,8 @@
 @section('content')
 
     <div class="container chats">
+        {{-- <loading v-model:active="isLoading" :can-cancel="false" :on-cancel="" :is-full-page="true" /> --}}
+
         <div class="row">
             <div class="col-md-9 col-md-offset-2">
                 <div class="card card-default">
@@ -14,7 +16,8 @@
                         </strong>
                         <br>
                         <small> @{{ date }}</small>
-                        <a href="{{ route('dashboard') }}" class="btn btn-sm btn-inverse float-right">
+                        <a href="{{ route('dashboard', ['tanggal_awal' => now()->format('Y-m-01'), 'tanggal_akhir' => now()->format('Y-m-t')]) }}"
+                            class="btn btn-sm btn-inverse float-right">
                             Dashboard
                         </a>
                         <a href="{{ route('antrian') }}" class="btn btn-sm btn-warning float-right mr-2">
@@ -28,8 +31,8 @@
                     </div>
 
                     <div class="card-body">
-                        <pasien-list :pasien="pasien" :time="time" :user="{{ auth()->user() }}"
-                            @statusupdated="updateStatus"></pasien-list>
+                        <pasien-list :time="time" :pasien="pasien" url="{{ env('TELEGRAM_START_URL', null) }}"
+                            :user="{{ auth()->user() }}" @statusupdated="updateStatus"></pasien-list>
                     </div>
                 </div>
             </div>

@@ -41,6 +41,7 @@
     <button
       class="btn btn-primary btn-sm float-right"
       id="btn-chat"
+      :disabled="$root.$data.isLoading"
       @click="createPasien"
     >
       Kirim

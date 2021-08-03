@@ -40,9 +40,9 @@ class sendPharmacyQueueStatus implements ShouldQueue
         $pasien = $this->pasien;
         $pasien_id = $this->pasien->id ?? $this->pasien['id'];
         $message = $this->telegram_message;
-        $username = $message['message']['from']['username'];
+        $username = $message['message']['from']['username'] ?? '';
         $first_name = $message['message']['from']['first_name'];
-        $last_name = $message['message']['from']['last_name'];
+        $last_name = $message['message']['from']['last_name'] ?? '';
         TelegramUser::updateOrCreate(
             ['chat_id' => $message['message']['from']['id']],
             [
@@ -68,7 +68,7 @@ class sendPharmacyQueueStatus implements ShouldQueue
                     "Anda akan diberikan notifikasi setelah order selesai di proses,\n" .
                     "Terimakasih"
             ]);
-        } elseif (($pasien->status ?? $pasien['status']) == 0 || ($pasien->status ?? $pasien['status']) === true) {
+        } elseif (($pasien->status ?? $pasien['status']) == 0 || ($pasien->status ?? $pasien['status']) === false) {
             Telegram::sendMessage([
                 'chat_id' => $message['message']['from']['id'],
                 'parse_mode' => 'HTML',
@@ -78,13 +78,13 @@ class sendPharmacyQueueStatus implements ShouldQueue
                     "\n" .
                     "Terimakasih"
             ]);
-        } elseif (($pasien->status ?? $pasien['status']) === 1 || ($pasien->status ?? $pasien['status']) === false) {
+        } elseif (($pasien->status ?? $pasien['status']) === 1 || ($pasien->status ?? $pasien['status']) === true) {
             Telegram::sendMessage([
                 'chat_id' => $message['message']['from']['id'],
                 'parse_mode' => 'HTML',
                 'text' =>
                 'Halo! Order obat atas nama ' . ($pasien->nama ?? $pasien['nama']) .
-                    " <b>telah selesai dan telah diterima pihak penerima pada " . $pasien->waktu_diambil . "</b>\n \n" .
+                    " <b>telah selesai dan telah diterima pihak penerima pada " . ($pasien->waktu_diambil ?? $pasien['waktu_diambil'])->format('d F Y H:i:s') . "</b>\n \n" .
                     "\n" .
                     "Terimakasih"
             ]);

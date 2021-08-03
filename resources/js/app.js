@@ -27,6 +27,8 @@ files.keys().map(key => Vue.component(key.split('/').pop().split('.')[0], files(
  */
 
 import VueHtmlToPaper from 'vue-html-to-paper';
+import VueLoading from 'vue-loading-overlay';
+import 'vue-loading-overlay/dist/vue-loading.css';
 const options = {
     name: '_blank',
     specs: [
@@ -43,13 +45,22 @@ const options = {
     windowTitle: window.document.title, // override the window title
 }
 Vue.use(VueHtmlToPaper, options);
+Vue.use(VueLoading, {
+    // Optional parameters
+    loader: 'dots',
+    container: null,
+    canCancel: false,
+    onCancel: this.onCancel,
+});
 
 const app = new Vue({
     el: '#app',
+
     data: {
         date: '',
         time: '',
         pasien: [],
+        isLoading: false,
     },
 
     created() {
@@ -74,28 +85,63 @@ const app = new Vue({
     methods: {
         fetchAntrian() {
             this.pasien = [];
-            axios.get('/pasien').then(response => {
-                var data = response.data;
-                data.forEach(function (element, index) {
-                    element.antrian = data.length - index;
+            this.isLoading = true;
+            let loader = this.$loading.show();
+            axios.get('/pasien')
+                .then(response => {
+                    var data = response.data;
+                    data.forEach(function (element, index) {
+                        element.antrian = data.length - index;
+                    })
+                    this.pasien = data;
+                    this.isLoading = false;
+                    loader.hide();
                 })
-                this.pasien = data;
-            });
+                .catch(e => {
+                    alert(e);
+                    console.error(e);
+                    this.isLoading = false;
+                    loader.hide();
+                });
         },
 
         createPasien(pasien) {
-            axios.post('/pasien', pasien).then(response => {
-                console.log(response.data);
-            }).catch(err => console.error(err));
+            this.isLoading = true;
+            let loader = this.$loading.show();
+            axios.post('/pasien', pasien)
+                .then(response => {
+                    console.log(response.data);
+                    this.isLoading = false;
+                    loader.hide();
+                })
+                .catch(e => {
+                    alert(e);
+                    console.error(e);
+                    this.isLoading = false;
+                    this.fetchAntrian();
+                    loader.hide();
+                });
         },
 
         updateStatus(id, status) {
             const data = {
                 status: status
             }
-            axios.post('/pasien/' + id, data).then(response => {
-                console.log(response.data);
-            }).catch(err => console.error(err));
+            this.isLoading = true;
+            let loader = this.$loading.show();
+            axios.post('/pasien/' + id, data)
+                .then(response => {
+                    console.log(response.data);
+                    this.isLoading = false;
+                    loader.hide();
+                })
+                .catch(e => {
+                    alert(e);
+                    console.error(e);
+                    this.isLoading = false;
+                    this.fetchAntrian();
+                    loader.hide();
+                });
         },
     }
 });

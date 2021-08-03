@@ -52,7 +52,8 @@ class Pasien extends Model
         $start = $this->attributes['created_at'];
         $end = $this->attributes['waktu_selesai'];
         $diff =  Carbon::parse($start)->diffInSeconds($end);
-        return $diff > 3600 ? gmdate('H:i:s', $diff - 3600) : '-';
+        $late = $this->jenis_obat == 'Racikan' ? 3600 : 1800;
+        return $diff > $late ? gmdate('H:i:s', $diff - $late) : '-';
     }
 
     public function getTimerCountAttribute()
@@ -64,14 +65,14 @@ class Pasien extends Model
     public function setStatusAttribute($value)
     {
         $now = now();
-        if ($value) {
-            $this->attributes['waktu_diambil'] = $now;
-        } else {
-            $this->attributes['waktu_selesai'] = $now;
-        }
+        // if ($value) {
+        $this->attributes[$value ? 'waktu_diambil' : 'waktu_selesai'] = $now;
+        // } else {
+        // $this->attributes['waktu_selesai'] = $now;
+        // }
         $this->attributes['status'] = $value;
         $telegram_user = $this->telegram_user()->get();
-        foreach ($telegram_user as $key => $value) {
+        foreach ($telegram_user as $value) {
             $message = [
                 "message" => [
                     "from" => [

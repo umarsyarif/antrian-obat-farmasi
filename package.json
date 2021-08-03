@@ -24,6 +24,7 @@
         "pusher-js": "^4.3.1",
         "qrcode": "^1.4.4",
         "vue-html-to-paper": "^1.3.1",
+        "vue-loading-overlay": "^3.0",
         "vue-qrcode": "^0.4.0"
     }
 }

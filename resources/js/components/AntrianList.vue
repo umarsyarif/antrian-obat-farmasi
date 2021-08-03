@@ -3,7 +3,7 @@
     <table class="table">
       <thead>
         <tr>
-          <th scope="col">#</th>
+          <th scope="col">No</th>
           <th scope="col">Nama Pasien</th>
           <th scope="col">Jenis Pasien</th>
           <th scope="col">Jenis Obat</th>
